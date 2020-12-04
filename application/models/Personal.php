@@ -57,6 +57,8 @@ class Personal extends CI_Model{
 				'users' => [],
 				'Courses' => false,
 				's_id'   => null,
+				 'fname'  => null,
+				 'lname'  => null,
 				 'message' => 'Email already exist',
 				 'password' => false,
 				 'email'  => false
@@ -65,17 +67,34 @@ class Personal extends CI_Model{
 
 		}
 		else{
+			if($password == "" || $batch_id == ""){
+				$data = [
+					'flag' => false,
+					'users' => null,
+					'Courses ' => false,
+					's_id'   => null,
+					'fname'  => null,
+					 'lname'  => null,
+					'message' => 'Not successfully registered'
+				   ];
+			
+					 return $data;
+			}
+			else{
+			
 			$sql = "INSERT INTO students (email,first_name,last_name,password) VALUES (?,?,?,?)";
 			$query = $this->db->query($sql,array($email,$first_name,$last_name,$password));
 		
 			if($query){
-				$sql = "SELECT id from students where email = ?";
+				$sql = "SELECT * from students where email = ?";
 				$query2 = $this->db->query($sql,array($email));
 				$ans = $query2->result();
 				$sql = "INSERT INTO users (student_id ,batch_id,objective_of_learning) VALUES (?,?,?)";
 				$query = $this->db->query($sql,array($ans[0]->id,$batch_id,$objective_of_learning));
 				
 				$s_id = $ans[0]->id;
+				$fname = $ans[0]->first_name;
+				$lname = $ans[0]->last_name;
 				 $sql = "select * FROM users where student_id = ?";
 				 $query = $this->db->query($sql,array($s_id));
 				 $users = $query->result();
@@ -87,11 +106,15 @@ class Personal extends CI_Model{
 				'users' => $users,
 				'Courses ' => $Courses,
 				's_id'   => $s_id,
+				'fname'  => $fname,
+				 'lname'  => $lname,
 				'message' => 'successfully registered'
 			   ];
 		
 		     	return $data;
 			}
+		}
+	
 		}
 		
     }
@@ -102,6 +125,11 @@ class Personal extends CI_Model{
 		$s_id = (int)$s_id;
 		$batch_id = (int)$batch_id;
 		$course_id = (int)$course_id;
+		$sql = "select * from students where id = ?";
+		$query = $this->db->query($sql,array($s_id));
+		$name = $query->result();
+		$fname =   $name[0]->first_name;
+		$lname = $name[0]->last_name;
 		$sql = "select batches.course_id from batches INNER JOIN users ON batches.id = users.batch_id AND student_id = ?";
 		$query = $this->db->query($sql,array($s_id));
        foreach ($query->result_array() as $row)
@@ -113,6 +141,8 @@ class Personal extends CI_Model{
 							 'flag' => false,
 							 'Course' => false,
 							 's_id'   => $s_id,
+							 'fname'  => $fname,
+				             'lname'  => $lname,
 							 'message' => 'Course already registered',
 
 						];
@@ -120,19 +150,39 @@ class Personal extends CI_Model{
 						return $data;
 		}
         
-      }       
-	  $sql = "select id from students where id = ?";
-	  $query = $this->db->query($sql,array($s_id));
+	  }
+	  if($batch_id == ""){
+		$data = [
+			'flag' => false,
+			'users' => null,
+			'Courses ' => false,
+			's_id'   => null,
+			'fname'  => null,
+			 'lname'  => null,
+			'message' => 'Not successfully registered'
+		   ];
+	
+			 return $data;
+	  }  
+	  else{ 
+		  
+	  $sql = "select * from students where id = ?";
+	  $query = $this->db->query($sql,array(23));
 	  $new_s_id = $query->result();
-	  $new_s_id =   $new_s_id[0]->id;
+	 
+	  $fname =   $new_s_id[0]->first_name;
+      $lname = $new_s_id[0]->last_name;
+    	$new_s_id =   $new_s_id[0]->id;
 	  $sql = "INSERT INTO users (student_id ,batch_id,objective_of_learning) VALUES (?,?,?)";
 	  $query = $this->db->query($sql,array($new_s_id,$batch_id,$objective_of_learning));
-	
+	  
 			   if($query){
 				$data = [
 					'flag' => true,
 					'Course' => true,
 					's_id'   => $s_id,
+					'fname'  => $fname,
+				    'lname'  => $lname,
 					'message' => 'successfully registered',
 
 			   ];
@@ -144,13 +194,15 @@ class Personal extends CI_Model{
 					'flag' => false,
 					'Course' => false,
 					's_id'   => $s_id,
+					'fname'  => $fname,
+				    'lname'  => $lname,
 					'message' => 'something went wrong',
 
 			   ];
 			   return $data;
 			}
 
-
+		}
 			
 		 }
 	public function loginModel($email, $password)
@@ -164,6 +216,8 @@ class Personal extends CI_Model{
 			$pass = $query->result();
 			if($pass[0]->password == $password){
 				$s_id = $pass[0]->id;
+				$fname = $pass[0]->first_name;
+				$lname = $pass[0]->last_name;
 				 $sql = "select * FROM users where student_id = ?";
 				 $query = $this->db->query($sql,array($s_id));
 				 $users = $query->result();
@@ -174,7 +228,9 @@ class Personal extends CI_Model{
                 'flag' => true,
 				'users' => $users,
 				'Courses' => $Courses,
-				's_id'   => $s_id
+				's_id'   => $s_id,
+				'fname'  => $fname,
+				'lname'  => $lname
 			];
 			return $data;
 		
@@ -186,7 +242,9 @@ class Personal extends CI_Model{
 					'users' => null,
 					'Courses' => null,
 					's_id'   => null,
-					'message' => 'password wrong',
+					'fname'  => null,
+				    'lname'  => null,
+ 					'message' => 'password wrong',
 					 'password' => false,
 					 'email'  => true
 				];
@@ -201,6 +259,8 @@ class Personal extends CI_Model{
 				'users' => null,
 				'Courses' => null,
 				's_id'   => null,
+				'fname'  => null,
+				 'lname'  => null,
 				'message' => 'Email not exist',
 				 'password' => false,
 				 'email'  => false

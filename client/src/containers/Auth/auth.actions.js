@@ -156,7 +156,10 @@ export const authUserLogin = (userData) => dispatch => {
 				axios.post(apiEndPoint, (userData)).then(res => {
 					
 					if(res.data.data.data.flag) {
+						console.error("kl Name",res.data.data.data.fname);
 						localStorage.setItem("isAuth", res.data.data.data.s_id);
+						localStorage.setItem("fname", res.data.data.data.fname);
+						localStorage.setItem("lname", res.data.data.data.lname);
 						dispatch(setAuth(res.data.data.data));
 					} else {
 						dispatch(authWrong(res.data.data.data));
@@ -177,6 +180,8 @@ export const authUserRegister = (userData) => dispatch => {
 						//	debugger
 						if(res.data.data.data.flag) {
 							localStorage.setItem("isAuth", res.data.data.data.s_id);
+							localStorage.setItem("fname", res.data.data.data.fname);
+							localStorage.setItem("lname", res.data.data.data.lname);
 							dispatch(setAuth(res.data.data.data));
 						} else {
 							dispatch(authWrong(res.data.data.data));
@@ -192,6 +197,9 @@ export const logoutUser = () => dispatch => {
 	// Remove token from local storage
 		localStorage.removeItem("jwtToken");
 		localStorage.removeItem("isAuth");
+		localStorage.removeItem("fname");
+		localStorage.removeItem("lname");
+		
 		//  setAuthToken(false);
 		dispatch(setCurrentLogout());
 };

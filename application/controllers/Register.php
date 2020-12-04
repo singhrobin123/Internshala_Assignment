@@ -25,10 +25,10 @@ class Register extends CI_Controller
     public function index()
     {
         
-        
+       
         $json = file_get_contents('php://input');
         $obj  = json_decode($json);
-        
+       
         $flag = $obj->flag;
         
         if ($flag == 0) {
@@ -41,7 +41,8 @@ class Register extends CI_Controller
             $response['success']   = true;
             $response['data']      = $data;
             $this->output->set_status_header(200)->set_content_type('application/json')->set_output(json_encode($response));
-        } else {
+        }
+         else {
             
             $email                 = $obj->email;
             $password              = $obj->password;

@@ -17,7 +17,7 @@ class Register extends Component {
 			select_courses : null,
 			select_batch : null,
 			student_id : null,
-			objective_learning:null,
+			objective_learning:"Gain a new skill",
 			courses : null,
             batch: [],
 			data:null ,
@@ -25,11 +25,25 @@ class Register extends Component {
 			emailError:false,
 			courseError:false          
         };
-    }
+	}
+	
+	onBlurHandler = ({target}) =>{
+
+		console.error("called blur",target.name);
+		if(target.name == "email"  || target.name == "select_courses"){
+		if(localStorage.getItem("isAuth") == null){
+			this.props.authUserRegister({ email:this.state.email,password: this.state.password, first_name: this.state.first_name, last_name:this.state.last_name,select_batch:this.state.select_batch,objective_learning:this.state.objective_learning,select_courses:this.state.select_courses,flag : 1});
+		}
+	  else{
+		this.props.authUserRegister({ s_id:parseInt(localStorage.getItem("isAuth")),select_courses:parseInt(this.state.select_courses),select_batch:parseInt(this.state.select_batch),objective_learning:this.state.objective_learning,flag : 0});
+	  }
+
+	}
+	}
     onChangeHandler = ({ target }) => {
         
         let { name, value } = target;
-        this.setState({ [name]: value });
+        this.setState({ [name]: value,courseError:false,emailError:false});
     };
     onChangeHandlerCourse = ({ target }) => {
       
@@ -40,7 +54,7 @@ class Register extends Component {
                x.batch.map(y=>ans.push({id:y.batch_id,date:y.date}))
 			}
 		})
-        this.setState({ [name]: value ,batch:ans});
+        this.setState({ [name]: value ,batch:ans,courseError:false,emailError:false});
 	};
     submitBtnHandler = ({ target }) => {
     
@@ -116,6 +130,7 @@ class Register extends Component {
 					onChangeHandler={this.onChangeHandler}
 					submitBtnHandler={this.submitBtnHandler}
 					crossHandle = {this.crossHandle}
+					onBlurHandler = {this.onBlurHandler}
 				/>
 				<Item />
             </>
@@ -132,14 +147,14 @@ const RegisterCustomerForm = (props) => {
 						<h4 className="modal-title text-white">Customer Register</h4>
 						<button type="button" className="close text-white" data-dismiss="modal" onClick={ props.crossHandle}> × </button>
 					</div>
-					<form action="#" method="POST">
+					<form onSubmit={(e)=>{e.preventDefault();}}>
 						<div className="modal-body">
 							<div className="row">
 								<div className="col-md-12"> { props.isAuth == false &&
 									<>
 										<label htmlFor className="font-weight-bold"> Email: </label>
 										<div className="form-group">
-											<input type="email" className="form-control" name="email" value={props.email || ""} onChange={props.onChangeHandler} placeholder="Enter the Email.." required="required" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please Enter Currect Email.." /> </div> {props.emailError &&
+											<input type="email" className="form-control" onBlur={props.onBlurHandler} name="email" value={props.email || ""} onChange={props.onChangeHandler} placeholder="Enter the Email.." required="required" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please Enter Currect Email.." /> </div> {props.emailError &&
 										<>
 											<label htmlFor="email" style={{color: "red"}} className="font-weight-bold">{props.message}</label>
 											<br />
@@ -156,7 +171,7 @@ const RegisterCustomerForm = (props) => {
 											</> }
 											<label htmlFor className="font-weight-bold">Select Course:</label>
 											<div className="form-group">
-												<select name="select_courses" className="form-control" value={props.select_courses || ""} onChange={props.onChangeHandlerCourse} required>
+												<select name="select_courses" className="form-control" onBlur={props.onBlurHandler} value={props.select_courses || ""} onChange={props.onChangeHandlerCourse} required>
 													<option value>Select Course..</option> {props.courses && props.courses.map((x)=>(
 													<option value={x.course_id}>{x.name}</option> )) } </select>
 											</div> {props.courseError &&
@@ -184,7 +199,7 @@ const RegisterCustomerForm = (props) => {
 								</div>
 							</div>
 							<div className="form-group text-right">
-								<button type="button" onClick={props.submitBtnHandler} name="Customer" className="btn btn-success font-weight-bold p-1 px-3"> Register </button>
+								<button type="submit" onClick={props.submitBtnHandler} name="Customer" className="btn btn-success font-weight-bold p-1 px-3"> Register </button>
 							</div>
 						</div>
 					</form>

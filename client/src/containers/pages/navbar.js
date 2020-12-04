@@ -1,6 +1,8 @@
 import React from 'react';
 
   const Navbar = props =>{
+	  console.error("fName",props.fname);
+	  console.error("lName",props.lname);
         return(
         <>
 				<nav className="navbar navbar-expand-lg navbar-dark   smallDevice" style={ { backgroundColor : "#acb6c1" }}>
@@ -18,7 +20,7 @@ import React from 'react';
 									<li className="nav-item"> <a className="nav-link btn btn-success btn-sm font-weight-bold text-white p-1 px-3 buttonLogin" href="/home/dashboard">Dashboard</a> </li>
 									<li className="nav-item mx-3"> <a className="nav-link btn btn-primary btn-sm font-weight-bold text-white p-1 px-3 buttonRegister" href="/home/register">Register Courses</a> </li>
 									<li className="nav-item dropdown bg-dark font-normal">
-										<a className="nav-link dropdown-toggle text-white font-weight-bold" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i className="fas fa-user-tie mx-2" style={{fontSize: '25px'}} /> {props.name} </a>
+										<a className="nav-link dropdown-toggle text-white font-weight-bold" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i className="fas fa-user-tie mx-2" style={{fontSize: '25px'}} /> {props.fname}  {props.lname} </a>
 										<div className="dropdown-menu bg-info" aria-labelledby="navbarDropdown">
 											<div className="dropdown-divider" />
 											<div className="dropdown-divider" />

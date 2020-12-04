@@ -16,7 +16,8 @@ class Auth extends Component{
         this.state={
 			
 			isAuth : false,
-			name : null,
+            fname : null,
+            lname:null,
 			show:false               
         }
     }                    
@@ -29,7 +30,7 @@ class Auth extends Component{
 
        if (localStorage.getItem("isAuth") != null) {
                              let s_id = localStorage.getItem("isAuth");
-                             this.setState({isAuth:true});
+                             this.setState({isAuth:true,fname:localStorage.getItem("fname"),lname:localStorage.getItem("lname")});
              }
     
         }
@@ -41,7 +42,7 @@ class Auth extends Component{
     
             if (localStorage.getItem("isAuth") != null) {
                                 let s_id = localStorage.getItem("isAuth");
-                                this.setState({isAuth:true});
+                                this.setState({isAuth:true,fname:localStorage.getItem("fname"),lname:localStorage.getItem("lname")});
                 }
 
 
@@ -51,7 +52,8 @@ class Auth extends Component{
                   <>
                 
                     <Navbar
-                    name = {this.state.name}
+                     fname = {this.state.fname}
+                     lname = {this.state.lname}
                     isAuth = {this.state.isAuth}
                     LogoutHandle = {this.LogoutHandle}
                     />
